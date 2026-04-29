@@ -66,7 +66,7 @@
               <div class="player-langs">
                 <span v-for="lang in player.languages" :key="lang" class="lang-badge">{{ lang }}</span>
               </div>
-              </div>
+            </div>
           </div>
         </div>
 
@@ -97,22 +97,83 @@ const currentGame = ref(null);
 const isSearching = ref(false);
 const matchResults = ref(null);
 
+// Base de datos actualizada con los URIs de lanzamiento
 const gamesDatabase = {
-  'lol': { name: 'League of Legends', release: '2009', genre: 'MOBA', platforms: 'PC', image: 'https://static-cdn.jtvnw.net/ttv-boxart/21779-285x380.jpg' },
-  'cs2': { name: 'Counter Strike 2', release: '2023', genre: 'FPS', platforms: 'PC', image: 'https://static-cdn.jtvnw.net/ttv-boxart/32399-285x380.jpg' },
-  'valorant': { name: 'Valorant', release: '2020', genre: 'Tactical Shooter', platforms: 'PC, PS5, Xbox Series X', image: 'https://static-cdn.jtvnw.net/ttv-boxart/516575-285x380.jpg' },
-  'fortnite': { name: 'Fortnite', release: '2017', genre: 'Battle Royale', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/33214-285x380.jpg' },
-  'rocket-league': { name: 'Rocket League', release: '2015', genre: 'Sports', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/30921-285x380.jpg' },
-  'overwatch': { name: 'Overwatch', release: '2022', genre: 'Hero Shooter', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/515025-285x380.jpg' },
-  'minecraft': { name: 'Minecraft', release: '2011', genre: 'Sandbox', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/27471-285x380.jpg' },
-  'warzone': { name: 'Warzone', release: '2020', genre: 'Battle Royale', platforms: 'PC, PS5, Xbox Series X', image: 'https://static-cdn.jtvnw.net/ttv-boxart/512710-285x380.jpg' },
-  'apex': { name: 'Apex Legends', release: '2019', genre: 'Battle Royale', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/511224-285x380.jpg' },
-  'marvel-rivals': { name: 'Marvel Rivals', release: '2024', genre: 'Hero Shooter', platforms: 'PC, PS5, Xbox Series X', image: 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2767030/library_600x900_2x.jpg' },
-  'gta-v': { name: 'GTA V Online', release: '2013', genre: 'Action', platforms: 'PC, PS5, Xbox Series X', image: 'https://static-cdn.jtvnw.net/ttv-boxart/32982-285x380.jpg' },
-  'dota-2': { name: 'Dota 2', release: '2013', genre: 'MOBA', platforms: 'PC', image: 'https://static-cdn.jtvnw.net/ttv-boxart/29595-285x380.jpg' },
-  'pubg': { name: 'PUBG', release: '2017', genre: 'Battle Royale', platforms: 'PC, PS5, Xbox Series X', image: 'https://static-cdn.jtvnw.net/ttv-boxart/493057-285x380.jpg' },
-  'rust': { name: 'Rust', release: '2013', genre: 'Survival', platforms: 'PC, PS5, Xbox Series X', image: 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/252490/library_600x900_2x.jpg' },
-  'wow': { name: 'World of Warcraft', release: '2004', genre: 'MMORPG', platforms: 'PC', image: 'https://static-cdn.jtvnw.net/ttv-boxart/18122-285x380.jpg' }
+  'lol': { 
+    name: 'League of Legends', 
+    uri: 'riotclient://launch-product=league_of_legends&patchline=live',
+    release: '2009', genre: 'MOBA', platforms: 'PC', image: 'https://static-cdn.jtvnw.net/ttv-boxart/21779-285x380.jpg' 
+  },
+  'cs2': { 
+    name: 'Counter Strike 2', 
+    uri: 'steam://run/730',
+    release: '2023', genre: 'FPS', platforms: 'PC', image: 'https://static-cdn.jtvnw.net/ttv-boxart/32399-285x380.jpg' 
+  },
+  'valorant': { 
+    name: 'Valorant', 
+    uri: 'riotclient://launch-product=valorant&patchline=live',
+    release: '2020', genre: 'Tactical Shooter', platforms: 'PC, PS5, Xbox Series X', image: 'https://static-cdn.jtvnw.net/ttv-boxart/516575-285x380.jpg' 
+  },
+  'fortnite': { 
+    name: 'Fortnite', 
+    uri: 'com.epicgames.launcher://apps/Fortnite?action=launch&silent=true',
+    release: '2017', genre: 'Battle Royale', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/33214-285x380.jpg' 
+  },
+  'rocket-league': { 
+    name: 'Rocket League', 
+    uri: 'steam://run/252950',
+    release: '2015', genre: 'Sports', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/30921-285x380.jpg' 
+  },
+  'overwatch': { 
+    name: 'Overwatch', 
+    uri: 'battlenet://Pro',
+    release: '2022', genre: 'Hero Shooter', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/515025-285x380.jpg' 
+  },
+  'minecraft': { 
+    name: 'Minecraft', 
+    uri: 'minecraft://',
+    release: '2011', genre: 'Sandbox', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/27471-285x380.jpg' 
+  },
+  'warzone': { 
+    name: 'Warzone', 
+    uri: 'battlenet://WLBY',
+    release: '2020', genre: 'Battle Royale', platforms: 'PC, PS5, Xbox Series X', image: 'https://static-cdn.jtvnw.net/ttv-boxart/512710-285x380.jpg' 
+  },
+  'apex': { 
+    name: 'Apex Legends', 
+    uri: 'steam://run/1172470',
+    release: '2019', genre: 'Battle Royale', platforms: 'PC, PS5, Xbox Series X, Switch 2', image: 'https://static-cdn.jtvnw.net/ttv-boxart/511224-285x380.jpg' 
+  },
+  'marvel-rivals': { 
+    name: 'Marvel Rivals', 
+    uri: 'steam://run/2767030',
+    release: '2024', genre: 'Hero Shooter', platforms: 'PC, PS5, Xbox Series X', image: 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2767030/library_600x900_2x.jpg' 
+  },
+  'gta-v': { 
+    name: 'GTA V Online', 
+    uri: 'steam://run/271590',
+    release: '2013', genre: 'Action', platforms: 'PC, PS5, Xbox Series X', image: 'https://static-cdn.jtvnw.net/ttv-boxart/32982-285x380.jpg' 
+  },
+  'dota-2': { 
+    name: 'Dota 2', 
+    uri: 'steam://run/570',
+    release: '2013', genre: 'MOBA', platforms: 'PC', image: 'https://static-cdn.jtvnw.net/ttv-boxart/29595-285x380.jpg' 
+  },
+  'pubg': { 
+    name: 'PUBG', 
+    uri: 'steam://run/578080',
+    release: '2017', genre: 'Battle Royale', platforms: 'PC, PS5, Xbox Series X', image: 'https://static-cdn.jtvnw.net/ttv-boxart/493057-285x380.jpg' 
+  },
+  'rust': { 
+    name: 'Rust', 
+    uri: 'steam://run/252490',
+    release: '2013', genre: 'Survival', platforms: 'PC, PS5, Xbox Series X', image: 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/252490/library_600x900_2x.jpg' 
+  },
+  'wow': { 
+    name: 'World of Warcraft', 
+    uri: 'battlenet://WoW',
+    release: '2004', genre: 'MMORPG', platforms: 'PC', image: 'https://static-cdn.jtvnw.net/ttv-boxart/18122-285x380.jpg' 
+  }
 };
 
 onMounted(() => {
@@ -138,8 +199,13 @@ const handleMatchmaking = async () => {
 };
 
 const handleLaunchGame = () => {
-  console.log("Iniciando instancia de juego para:", currentGame.value.name);
-  alert("¡PREPARANDO PARTIDA! Espere instrucciones...");
+  if (currentGame.value && currentGame.value.uri) {
+    console.log("Abriendo:", currentGame.value.name);
+    // Esta es la línea que abre el juego en el PC del usuario
+    window.location.href = currentGame.value.uri;
+  } else {
+    alert("No se ha podido encontrar el lanzador para este juego.");
+  }
 };
 </script>
 
@@ -238,7 +304,6 @@ const handleLaunchGame = () => {
 .player-langs { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
 .lang-badge { background: #08090b; font-size: 10px; padding: 3px 8px; border-radius: 4px; color: #aaa; }
 
-/* NUEVO CONTENEDOR Y BOTÓN GIGANTE */
 .final-action-container {
   display: flex;
   justify-content: center;
