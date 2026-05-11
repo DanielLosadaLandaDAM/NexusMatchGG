@@ -1,62 +1,55 @@
 <template>
-  <div id="header-wrapper">
-    <!-- Overlay del menú para móvil -->
-    <div v-if="isMenuOpen" class="menu-overlay" @click="isMenuOpen = false"></div>
+  <div id="header">
+    <div v-if="menuAbierto" class="bloqueo-bakground" @click="menuAbierto = false"></div>
 
-    <!-- Menú Lateral Desplegable -->
-    <transition name="slide-menu">
-      <nav v-if="isMenuOpen" class="side-menu">
-        <div class="side-menu-header">
-          <!-- Logo en el menú lateral (más pequeño y cierra el menú al pulsar) -->
-          <Logo size="22" @click="isMenuOpen = false" />
+    <transition name="animacion-lateral">
+      <nav v-if="menuAbierto" class="panel-nav">
+        <div class="logo-lateral">
+          <Logo tamanoPersonalizado="22" @click="menuAbierto = false" />
         </div>
-        <div class="menu-links">
-          <router-link to="/" class="menu-item" @click="isMenuOpen = false">
+        <div class="lista-links-nav">
+          <router-link to="/" class="opcion-links-menu" @click="menuAbierto = false">
             INICIO
           </router-link>
-          <router-link to="/about" class="menu-item" @click="isMenuOpen = false">
+          <router-link to="/about" class="opcion-links-menu" @click="menuAbierto = false">
             SOBRE NOSOTROS
           </router-link>
         </div>
       </nav>
     </transition>
 
-    <!-- Barra de navegación principal -->
-    <header class="main-header">
-      <div class="menu-section">
+    <header class="header-main-nav">
+      <div class="div-boton-menu">
         <button 
-          class="hamburger-btn" 
-          :class="{ 'is-active': isMenuOpen }" 
-          @click="isMenuOpen = !isMenuOpen"
+          class="boton-menu" 
+          :class="{ 'boton-activo': menuAbierto }" 
+          @click="menuAbierto = !menuAbierto"
         >
-          <span class="line"></span>
-          <span class="line"></span>
-          <span class="line"></span>
+          <span class="linea-boton"></span>
+          <span class="linea-boton"></span>
+          <span class="linea-boton"></span>
         </button>
       </div>
 
-      <div class="brand-section">
-        <!-- Logo principal (usa el tamaño por defecto de 38px) -->
+      <div class="div-logo-nexusmatch">
         <Logo />
       </div>
 
-      <div class="action-section">
-        <!-- Botones si no hay sesión -->
-        <div v-if="!userSession.user" class="auth-buttons">
-          <router-link to="/login" class="btn-auth">
+      <div class="div-perfil-user">
+        <div v-if="!userSession.user" class="botones-login">
+          <router-link to="/login" class="estilo-botones-autenticacion">
             INICIAR SESIÓN
           </router-link>
-          <router-link to="/registro" class="btn-auth">
+          <router-link to="/registro" class="estilo-botones-autenticacion">
             CREAR PERFIL
           </router-link>
         </div>
 
-        <!-- Avatar si hay sesión -->
-        <router-link v-else to="/profile" class="avatar-link">
-          <div class="avatar-circle">
+        <router-link v-else to="/profile" class="imagen-perfil">
+          <div class="circulo-avatar">
             <img 
               :src="userSession.user.avatar_url || 'https://www.gravatar.com/avatar/000?d=mp&f=y'" 
-              class="nav-avatar"
+              class="imagen-default"
             />
           </div>
         </router-link>
@@ -68,14 +61,13 @@
 <script setup>
 import { ref } from 'vue';
 import { userSession } from '../session';
-import Logo from './Logo.vue'; // Importamos el nuevo componente
+import Logo from './Logo.vue'; 
 
-const isMenuOpen = ref(false);
+const menuAbierto = ref(false);
 </script>
 
 <style scoped>
-/* ESTRUCTURA GENERAL DEL HEADER */
-.main-header {
+.header-main-nav {
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -87,9 +79,9 @@ const isMenuOpen = ref(false);
   z-index: 100;
 }
 
-.menu-section { flex: 1; display: flex; justify-content: flex-start; }
+.div-boton-menu { flex: 1; display: flex; justify-content: flex-start; }
 
-.hamburger-btn {
+.boton-menu {
   background: transparent;
   border: none;
   cursor: pointer;
@@ -100,7 +92,7 @@ const isMenuOpen = ref(false);
   z-index: 1001;
 }
 
-.line {
+.linea-boton {
   display: block;
   width: 30px;
   height: 3px;
@@ -109,18 +101,15 @@ const isMenuOpen = ref(false);
   transition: all 0.3s ease;
 }
 
-.hamburger-btn.is-active .line:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-.hamburger-btn.is-active .line:nth-child(2) { opacity: 0; }
-.hamburger-btn.is-active .line:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+.boton-menu.boton-activo .linea-boton:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.boton-menu.boton-activo .linea-boton:nth-child(2) { opacity: 0; }
+.boton-menu.boton-activo .linea-boton:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 
-.brand-section { flex: 2; display: flex; justify-content: center; }
+.div-logo-nexusmatch { flex: 2; display: flex; justify-content: center; }
 
-/* Hemos eliminado los estilos .logo y .gg-text porque ya están en Logo.vue */
+.div-perfil-user { flex: 1; display: flex; justify-content: flex-end; align-items: center; }
 
-.action-section { flex: 1; display: flex; justify-content: flex-end; align-items: center; }
-
-/* MENÚ LATERAL */
-.side-menu {
+.panel-nav {
   position: fixed;
   top: 0;
   left: 0;
@@ -135,13 +124,13 @@ const isMenuOpen = ref(false);
   border-right: 1px solid #2a2d35;
 }
 
-.side-menu-header {
+.logo-lateral {
   margin-bottom: 40px;
 }
 
-.menu-links { display: flex; flex-direction: column; gap: 20px; }
+.lista-links-nav { display: flex; flex-direction: column; gap: 20px; }
 
-.menu-item {
+.opcion-links-menu {
   color: #ccc;
   text-decoration: none;
   font-size: 18px;
@@ -155,18 +144,18 @@ const isMenuOpen = ref(false);
   gap: 15px;
 }
 
-.menu-item:hover {
+.opcion-links-menu:hover {
   color: white;
   background: #2a2d35;
   border-left: 4px solid #17bbba;
 }
 
-.menu-item.router-link-active {
+.opcion-links-menu.router-link-active {
   color: #17bbba;
   background: rgba(23, 187, 186, 0.1);
 }
 
-.menu-overlay {
+.bloqueo-bakground {
   position: fixed;
   top: 0;
   left: 0;
@@ -177,11 +166,11 @@ const isMenuOpen = ref(false);
   z-index: 999;
 }
 
-.slide-menu-enter-active, .slide-menu-leave-active { transition: transform 0.4s ease; }
-.slide-menu-enter-from, .slide-menu-leave-to { transform: translateX(-100%); }
+.animacion-lateral-enter-active, .animacion-lateral-leave-active { transition: transform 0.4s ease; }
+.animacion-lateral-enter-from, .animacion-lateral-leave-to { transform: translateX(-100%); }
 
-.auth-buttons { display: flex; gap: 15px; align-items: center; }
-.btn-auth {
+.botones-login { display: flex; gap: 15px; align-items: center; }
+.estilo-botones-autenticacion {
   background-color: #17bbba;
   color: white;
   padding: 12px 22px;
@@ -193,19 +182,18 @@ const isMenuOpen = ref(false);
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(23, 187, 186, 0.3);
 }
-.btn-auth:hover { background-color: #129d9c; transform: translateY(-2px); }
+.estilo-botones-autenticacion:hover { background-color: #129d9c; transform: translateY(-2px); }
 
-.avatar-circle {
+.circulo-avatar {
   width: 50px; height: 50px; border-radius: 50%;
   border: 2px solid #17bbba; overflow: hidden;
   transition: 0.3s; background: #1a1d24;
 }
-.avatar-circle:hover { transform: scale(1.1); box-shadow: 0 0 15px #17bbba; }
-.nav-avatar { width: 100%; height: 100%; object-fit: cover; }
+.circulo-avatar:hover { transform: scale(1.1); box-shadow: 0 0 15px #17bbba; }
+.imagen-default { width: 100%; height: 100%; object-fit: cover; }
 
 @media (max-width: 900px) {
-  .main-header { padding: 20px; }
-  /* El logo ya es responsivo dentro de su propio componente */
-  .action-section { display: none; } 
+  .header-main-nav { padding: 20px; }
+  .div-perfil-user { display: none; } 
 }
 </style>

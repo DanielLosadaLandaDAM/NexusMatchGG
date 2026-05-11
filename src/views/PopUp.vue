@@ -33,7 +33,7 @@ const router = useRouter();
 const hasAccepted = ref(false);
 
 onMounted(() => {
-  const consent = localStorage.getItem('nexus_cookies_accepted');
+  const consent = localStorage.getItem('cookies_aceptadas');
   
   if (consent === 'true') {
     hasAccepted.value = true;
@@ -42,7 +42,7 @@ onMounted(() => {
 });
 
 const acceptCookies = () => {
-  localStorage.setItem('nexus_cookies_accepted', 'true');
+  localStorage.setItem('cookies_aceptadas', 'true');
   hasAccepted.value = true;
   router.push('/');
 };

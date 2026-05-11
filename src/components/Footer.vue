@@ -1,12 +1,12 @@
 <template>
-  <footer class="nexus-footer">
-    <div class="footer-content">
-      <div class="footer-divider"></div>
-      <div class="footer-text-box">
-        <p class="copyright">
-          <span class="brand">NEXUSMATCH<span class="cyan">GG</span></span> 
+  <footer class="footer-pagina-principal">
+    <div class="contenedor-alineado">
+      <div class="linea-decorativa"></div>
+      <div class="fondo-difuminado-texto">
+        <p class="texto-copyright">
+          <span class="nombre">NEXUSMATCH<span class="texto-resaltado">GG</span></span> 
           © {{ new Date().getFullYear() }} 
-          <span class="sep">|</span> 
+          <span class="separador-vertical">|</span> 
           Todos los derechos reservados
         </p>
       </div>
@@ -15,22 +15,22 @@
 </template>
 
 <style scoped>
-.nexus-footer {
+.footer-pagina-principal {
   width: 100%;
   padding: 40px 0 20px;
   background: linear-gradient(to top, #0c0d12 0%, #08090b 100%);
   border-top: 1px solid #1a1d24;
-  margin-top: auto; /* Para asegurar que empuje si usas flex en App.vue */
+  margin-top: auto; 
 }
 
-.footer-content {
+.contenedor-alineado {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 5%;
   text-align: center;
 }
 
-.footer-divider {
+.linea-decorativa {
   height: 2px;
   width: 100px;
   background: #17bbba;
@@ -39,7 +39,7 @@
   border-radius: 2px;
 }
 
-.footer-text-box {
+.fondo-difuminado-texto {
   background: rgba(18, 20, 26, 0.5);
   padding: 15px 30px;
   border-radius: 50px;
@@ -48,7 +48,7 @@
   backdrop-filter: blur(5px);
 }
 
-.copyright {
+.texto-copyright {
   color: #666;
   font-size: 14px;
   letter-spacing: 1.5px;
@@ -56,34 +56,34 @@
   font-weight: 500;
 }
 
-.brand {
+.nombre {
   color: #eee;
   font-weight: 900;
   margin-right: 10px;
   font-family: 'Arial Black', sans-serif;
 }
 
-.cyan {
+.texto-resaltado {
   color: #17bbba;
 }
 
-.sep {
+.separador-vertical {
   color: #2a2d35;
   margin: 0 10px;
 }
 
-/* Efecto hover sutil */
-.nexus-footer:hover .footer-divider {
+.seccion-pie-pagina-principal:hover .linea-decorativa-horizontal-cian {
   width: 150px;
   transition: width 0.4s ease;
 }
 
+
 @media (max-width: 600px) {
-  .copyright {
+  .texto-copyright {
     font-size: 11px;
     letter-spacing: 0.5px;
   }
-  .footer-text-box {
+  .fondo-difuminado-texto {
     padding: 10px 20px;
   }
 }

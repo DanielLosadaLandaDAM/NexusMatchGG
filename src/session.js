@@ -1,6 +1,5 @@
 import { reactive } from 'vue';
 
-// Intentamos recuperar el usuario del localStorage si existe
 const savedUser = JSON.parse(localStorage.getItem('nexus_user'));
 
 export const userSession = reactive({

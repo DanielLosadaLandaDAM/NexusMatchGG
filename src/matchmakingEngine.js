@@ -5,7 +5,7 @@ const gameLimits = {
 };
 
 export const getSmartMatches = (currentUser, allUsers, gameSlug) => {
-  // 1. FILTRO OBLIGATORIO: Mismo juego y no soy yo mismo
+  // Prioridad 1
   let candidates = allUsers.filter(u => 
     u.id !== currentUser.id && 
     u.games.includes(gameSlug)
@@ -13,18 +13,18 @@ export const getSmartMatches = (currentUser, allUsers, gameSlug) => {
 
   if (candidates.length === 0) return null;
 
-  // 2. CÁLCULO DE AFINIDAD (Pesos 2026)
+  // 2. CÁLCULO DE AFINIDAD 
   const scored = candidates.map(player => {
     let affinity = 0;
 
-    // Prioridad 2: Idiomas (¿Comparten al menos uno?)
+    // Prioridad 2
     const commonLanguages = player.languages.filter(lang => currentUser.languages.includes(lang));
     if (commonLanguages.length > 0) affinity += 0.5;
 
-    // Prioridad 3: Estilo (Casual/Comp)
+    // Prioridad 3
     if (player.style === currentUser.style) affinity += 0.3;
 
-    // Prioridad 4: País
+    // Prioridad 4
     if (player.country === currentUser.country) affinity += 0.2;
 
     return { 
@@ -33,7 +33,7 @@ export const getSmartMatches = (currentUser, allUsers, gameSlug) => {
     };
   });
 
-  // 3. ORDENAR Y APLICAR LIMITES
+  // APLICAR LIMITES
   return scored
     .sort((a, b) => b.matchPercentage - a.matchPercentage)
     .slice(0, gameLimits[gameSlug] || 5);

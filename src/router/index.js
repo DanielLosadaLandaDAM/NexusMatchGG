@@ -19,7 +19,7 @@ const router = createRouter({
       path: '/game/:slug',
       name: 'game',
       component: GameView,
-      props: true // Esto permite que el componente reciba el nombre del juego como variable
+      props: true // Permite que el componente reciba el nombre del juego como variable
     },
     {
       path: '/registro',
@@ -50,21 +50,18 @@ const router = createRouter({
 })
 
 /**
- * EL GUARDIÁN DE NEXUSMATCH
- * Este bloque de código comprueba si el usuario ha aceptado las cookies
- * antes de permitirle navegar por el resto de la aplicación.
+  BLOQUE DE COOKIES :V
  */
 router.beforeEach((to, from, next) => {
-  // Comprobamos el valor en el almacenamiento local del navegador
-  const hasAcceptedCookies = localStorage.getItem('nexus_cookies_accepted');
+  // Se comprueba valor en local storage
+  const cookiesAceptadas = localStorage.getItem('cookies_aceptadas');
 
-  // Lógica de redirección:
-  // Si NO ha aceptado las cookies Y NO está ya intentando entrar a la vista del popup...
-  if (hasAcceptedCookies !== 'true' && to.name !== 'popup') {
-    // ...lo redirigimos forzosamente al PopUp
+  // Si no ha aceptado las cookies Y NO está intentando entrar a la vista del popup
+  if (cookiesAceptadas !== 'true' && to.name !== 'popup') {
+    // Se le redirige al Popup
     next({ name: 'popup' });
   } 
-  // En cualquier otro caso (ya aceptó o ya va al popup), lo dejamos pasar
+
   else {
     next();
   }
