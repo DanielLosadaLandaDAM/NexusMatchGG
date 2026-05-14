@@ -1,100 +1,100 @@
 <template>
-  <div class="profile-wrapper" v-if="userSession.user">
-    <div class="profile-card">
+  <div class="perfil" v-if="userSession.user">
+    <div class="div-user">
       <h2>Mi Perfil de Jugador</h2>
       
-      <div class="edit-form">
-        <div class="avatar-section">
+      <div class="form-perfil">
+        <div class="div-imagen-perfil">
           <img 
             :src="userSession.user.avatar_url || 'https://www.gravatar.com/avatar/000?d=mp&f=y'" 
-            class="large-avatar" 
+            class="imagen" 
           />
-          <div class="file-select">
-            <label for="avatar-input" class="file-label">Cambiar Avatar</label>
-            <input id="avatar-input" type="file" @change="handleFileUpload" accept="image/*" />
+          <div class="seleccionar-avatar">
+            <label for="entrada-avatar" class="cambiar-avatar">Cambiar Avatar</label>
+            <input id="entrada-avatar" type="file" @change="elegirImagen" accept="image/*" />
           </div>
-          <p class="player-id">ID: {{ userSession.user.id.slice(0,8) }}</p>
+          <p class="id">ID: {{ userSession.user.id.slice(0,8) }}</p>
         </div>
 
-        <div class="field">
-          <label>Username</label>
-          <input type="text" :value="userSession.user.username" disabled class="disabled-input" />
+        <div class="div-password">
+          <label>Nombre de Usuario</label>
+          <input type="text" :value="userSession.user.username" disabled class="entrada-bloqueada" />
         </div>
 
-        <div class="field">
+        <div class="div-password">
           <label>Correo electrónico</label>
-          <input type="email" v-model="editData.email" required />
+          <input type="email" v-model="formularioPerfil.correo" required />
         </div>
 
-        <div class="field">
+        <div class="div-password">
           <label>País</label>
-          <select v-model="editData.country" required>
-            <option v-for="c in allCountries" :key="c.code" :value="c.code">
-              {{ c.emoji }} {{ c.name }}
+          <select v-model="formularioPerfil.pais" required>
+            <option v-for="pais in listaPaises" :key="pais.codigo" :value="pais.codigo">
+              {{ pais.emoji }} {{ pais.nombre }}
             </option>
           </select>
         </div>
 
-        <div class="field-row">
-          <div class="field">
+        <div class="campos-dobles">
+          <div class="div-password">
             <label>Idiomas</label>
-            <select v-model="editData.languages" multiple class="select-multiple" required>
-              <option v-for="l in topLanguages" :key="l.code" :value="l.code">{{ l.name }}</option>
+            <select v-model="formularioPerfil.idiomas" multiple class="seleccion-multiple" required>
+              <option v-for="idioma in listaIdiomas" :key="idioma.codigo" :value="idioma.codigo">{{ idioma.nombre }}</option>
             </select>
           </div>
-          <div class="field">
+          <div class="div-password">
             <label>Mis Juegos</label>
-            <select v-model="editData.games" multiple class="select-multiple" required>
-              <option v-for="g in nexusGames" :key="g.slug" :value="g.slug">{{ g.name }}</option>
+            <select v-model="formularioPerfil.juegosFavoritos" multiple class="seleccion-multiple" required>
+              <option v-for="juego in listaJuegos" :key="juego.slug" :value="juego.slug">{{ juego.nombre }}</option>
             </select>
           </div>
         </div>
 
-        <div class="field">
+        <div class="div-password">
           <label>Descripción</label>
-          <textarea v-model="editData.description" rows="3"></textarea>
+          <textarea v-model="formularioPerfil.biografia" rows="3"></textarea>
         </div>
 
-        <div class="field">
+        <div class="div-password">
           <label>Estilo de Juego</label>
-          <select v-model="editData.style">
+          <select v-model="formularioPerfil.estiloJuego">
             <option value="casual">CASUAL</option>
             <option value="pro">COMPETITIVO</option>
           </select>
         </div>
 
-        <div class="password-box">
+        <div class="div-seguridad-confirmacion">
           <h3>Seguridad y Confirmación</h3>
           
-          <div class="field">
+          <div class="div-password">
             <label>Contraseña Actual (Obligatoria para guardar)</label>
-            <input type="password" v-model="passCheck.current" placeholder="••••••••" required />
+            <input type="password" v-model="verificacionSeguridad.actual" placeholder="••••••••" required />
           </div>
 
-          <div v-if="!isChangingPassword" class="password-toggle">
-            <a href="#" @click.prevent="isChangingPassword = true" class="toggle-link">
+          <div v-if="!cambiapassword" class="enlace-cambio-clave">
+            <a href="#" @click.prevent="cambiapassword = true" class="texto-cambio-password">
               ¿Quieres cambiar tu contraseña?
             </a>
           </div>
 
-          <div v-else class="password-fields">
-            <div class="field">
+          <div v-else class="div-nueva-password">
+            <div class="div-password">
               <label>Nueva Contraseña</label>
-              <input type="password" v-model="passCheck.new" placeholder="Escribe la nueva clave" />
+              <input type="password" v-model="verificacionSeguridad.nueva" placeholder="Escribe la nueva clave" />
             </div>
-            <div class="field">
+            <div class="div-password">
               <label>Confirmar Nueva</label>
-              <input type="password" v-model="passCheck.confirm" placeholder="Repite la nueva clave" />
+              <input type="password" v-model="verificacionSeguridad.confirmacion" placeholder="Repite la nueva clave" />
             </div>
-            <a href="#" @click.prevent="cancelPasswordChange" class="cancel-link">Cancelar cambio</a>
+            <a href="#" @click.prevent="cancelarCambiopassword" class="cancelar-cambio-password">Cancelar cambio</a>
           </div>
         </div>
 
-        <div class="actions">
-          <button @click="handleUpdate" class="save-btn" :disabled="loading">
-            {{ loading ? 'GUARDANDO...' : 'ACTUALIZAR PERFIL' }}
+        <div class="div-actualizar-perfil">
+          <button @click="actualizarPerfil" class="boton-guardar-cambios" :disabled="cargando">
+            {{ cargando ? 'GUARDANDO...' : 'ACTUALIZAR PERFIL' }}
           </button>
-          <button @click="handleLogout" class="logout-btn">CERRAR SESIÓN</button>
+          <button @click="cerrarSesion" class="boton-cerrar-sesion">CERRAR SESIÓN</button>
         </div>
       </div>
     </div>
@@ -107,128 +107,172 @@ import { userSession } from '../session';
 import { supabase } from '../supabase';
 import { useRouter } from 'vue-router';
 
-const router = useRouter();
-const loading = ref(false);
-const allCountries = ref([]);
-const selectedFile = ref(null);
-const isChangingPassword = ref(false);
+const routes = useRouter();
+const cargando = ref(false);
+const listaPaises = ref([]);
+const imagenUser = ref(null);
+const cambiapassword = ref(false);
 
-const nexusGames = [
-  { name: 'League of Legends', slug: 'lol' }, { name: 'Counter Strike 2', slug: 'cs2' },
-  { name: 'Valorant', slug: 'valorant' }, { name: 'Fortnite', slug: 'fortnite' },
-  { name: 'Rocket League', slug: 'rocket-league' }, { name: 'Overwatch', slug: 'overwatch' },
-  { name: 'Warzone', slug: 'warzone' }, { name: 'Apex Legends', slug: 'apex' },
-  { name: 'Marvel Rivals', slug: 'marvel-rivals' }, { name: 'Minecraft', slug: 'minecraft' },
-  { name: 'GTA V Online', slug: 'gta-v' }, { name: 'Dota 2', slug: 'dota-2' },
-  { name: 'PUBG', slug: 'pubg' }, { name: 'Rust', slug: 'rust' }, { name: 'World of Warcraft', slug: 'wow' }
+const listaJuegos = [
+  { nombre: 'League of Legends', slug: 'lol' }, { nombre: 'Counter Strike 2', slug: 'cs2' },
+  { nombre: 'Valorant', slug: 'valorant' }, { nombre: 'Fortnite', slug: 'fortnite' },
+  { nombre: 'Rocket League', slug: 'rocket-league' }, { nombre: 'Overwatch', slug: 'overwatch' },
+  { nombre: 'Warzone', slug: 'warzone' }, { nombre: 'Apex Legends', slug: 'apex' },
+  { nombre: 'Marvel Rivals', slug: 'marvel-rivals' }, { nombre: 'Minecraft', slug: 'minecraft' },
+  { nombre: 'GTA V Online', slug: 'gta-v' }, { nombre: 'Dota 2', slug: 'dota-2' },
+  { nombre: 'PUBG', slug: 'pubg' }, { nombre: 'Rust', slug: 'rust' }, { nombre: 'World of Warcraft', slug: 'wow' }
 ];
 
-const topLanguages = [
-  { name: 'Español', code: 'ES' }, { name: 'Inglés', code: 'EN' }, { name: 'Portugués', code: 'PT' },
-  { name: 'Francés', code: 'FR' }, { name: 'Alemán', code: 'DE' }, { name: 'Italiano', code: 'IT' }
+const listaIdiomas = [
+{ nombre: 'Español', codigo: 'ES' }, { nombre: 'Inglés', codigo: 'EN' }, { nombre: 'Portugués', codigo: 'PT' },
+  { nombre: 'Francés', codigo: 'FR' }, { nombre: 'Alemán', codigo: 'DE' }, { nombre: 'Italiano', codigo: 'IT' },
+  { nombre: 'Japonés', codigo: 'JA' }, { nombre: 'Coreano', codigo: 'KO' }, { nombre: 'Chino', codigo: 'ZH' },
+  { nombre: 'Turco', codigo: 'TR' }, { nombre: 'Ruso', codigo: 'RU' }, { nombre: 'Árabe', codigo: 'AR' }
 ];
 
-const editData = ref({
-  email: userSession.user?.email || '',
-  country: userSession.user?.country || '',
-  languages: userSession.user?.languages || [],
-  games: userSession.user?.games || [],
-  description: userSession.user?.description || '',
-  style: userSession.user?.style || 'casual'
+const formularioPerfil = ref({
+  correo: userSession.user?.email || '',
+  pais: userSession.user?.country || '',
+  idiomas: userSession.user?.languages || [],
+  juegosFavoritos: userSession.user?.games || [],
+  biografia: userSession.user?.description || '',
+  estiloJuego: userSession.user?.style || 'casual'
 });
 
-const passCheck = ref({ current: '', new: '', confirm: '' });
+const verificacionSeguridad = ref({ actual: '', nueva: '', confirmacion: '' });
 
 onMounted(async () => {
-  if (!userSession.user) { router.push('/login'); return; }
-  const res = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2,flag');
-  const data = await res.json();
-  allCountries.value = data.map(c => ({ name: c.name.common, code: c.cca2, emoji: c.flag })).sort((a,b) => a.name.localeCompare(b.name));
+  if (!userSession.user) { routes.push('/login'); return; }
+  
+  try {
+    const respuestaPaises = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2,flag');
+    const datosPaises = await respuestaPaises.json();
+    listaPaises.value = datosPaises.map(p => ({ 
+      nombre: p.name.common, 
+      codigo: p.cca2, 
+      emoji: p.flag 
+    })).sort((a, b) => a.nombre.localeCompare(b.nombre));
+  } catch (error) {
+    console.error("Error cargando países:", error);
+  }
 });
 
-const handleFileUpload = (e) => { selectedFile.value = e.target.files[0]; };
-const cancelPasswordChange = () => {
-  isChangingPassword.value = false;
-  passCheck.value.new = '';
-  passCheck.value.confirm = '';
+const elegirImagen = (evento) => { 
+  imagenUser.value = evento.target.files[0]; 
 };
 
-const handleUpdate = async () => {
-  if (passCheck.value.current !== userSession.user.password) {
+const cancelarCambiopassword = () => {
+  cambiapassword.value = false;
+  verificacionSeguridad.value.nueva = '';
+  verificacionSeguridad.value.confirmacion = '';
+};
+
+const actualizarPerfil = async () => {
+  // Compara la contraseña que el usuario escribió en el campo actual
+  if (verificacionSeguridad.value.actual !== userSession.user.password) {
     alert("❌ La contraseña actual es incorrecta.");
-    return;
+    return; 
   }
-  if (isChangingPassword.value && (!passCheck.value.new || passCheck.value.new !== passCheck.value.confirm)) {
+  // Comprueba: 
+  // Que la nueva contraseña no esté vacía
+  // Que la nueva contraseña y la de confirmación sean idénticas
+  if (cambiapassword.value && (!verificacionSeguridad.value.nueva || verificacionSeguridad.value.nueva !== verificacionSeguridad.value.confirmacion)) {
     alert("❌ Las nuevas contraseñas no coinciden.");
-    return;
+    return; 
   }
 
-  loading.value = true;
+// Se actva el estado de carga para bloquear botones y mostrar que la web está pensando
+  cargando.value = true;
+  
   try {
-    let newAvatarUrl = userSession.user.avatar_url;
-    if (selectedFile.value) {
-      const fileName = `${userSession.user.id}-${Date.now()}.${selectedFile.value.name.split('.').pop()}`;
-      await supabase.storage.from('avatars').upload(fileName, selectedFile.value);
-      newAvatarUrl = supabase.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
+    // Se mantiene la URL del avatar que ya tiene el usuario
+    let avatarActualizado = userSession.user.avatar_url;
+
+    // Si el usuario ha seleccionado un archivo nuevo en el input 
+    if (imagenUser.value) {
+      // Se crea un nombre de archivo único: ID + tiempo + extensión original
+      const nombreArchivo = `${userSession.user.id}-${Date.now()}.${imagenUser.value.name.split('.').pop()}`;
+      
+      // Se sube el archivo físico en Supabase Storage
+      await supabase.storage.from('avatars').upload(nombreArchivo, imagenUser.value);
+      
+      // Se pide la URL pública de ese archivo para guardarla en el perfil
+      avatarActualizado = supabase.storage.from('avatars').getPublicUrl(nombreArchivo).data.publicUrl;
     }
+    
+    const nuevosDatos = { 
+      email: formularioPerfil.value.correo,
+      country: formularioPerfil.value.pais,
+      languages: formularioPerfil.value.idiomas,
+      games: formularioPerfil.value.juegosFavoritos,
+      description: formularioPerfil.value.biografia,
+      style: formularioPerfil.value.estiloJuego,
+      avatar_url: avatarActualizado 
+    };
 
-    const updates = { ...editData.value, avatar_url: newAvatarUrl };
-    if (isChangingPassword.value) updates.password = passCheck.value.new;
+    // Si el usuario quiere cambiar contraseña se añade la nueva clave al objeto que va a la base de datos.
+    if (cambiapassword.value) nuevosDatos.password = verificacionSeguridad.value.nueva;
 
-    const { error } = await supabase.from('profiles').update(updates).eq('id', userSession.user.id);
+    // Se le dice a Supabase que actualice la tabla 'profiles'
+    const { error } = await supabase.from('profiles').update(nuevosDatos).eq('id', userSession.user.id);
+    
     if (error) throw error;
 
-    userSession.updateUser(updates);
-    alert("✅ Perfil actualizado");
-    isChangingPassword.value = false;
-    passCheck.value = { current: '', new: '', confirm: '' };
-  } catch (e) {
-    alert("Error: " + e.message);
+    // Actualización de los datos 
+    userSession.updateUser(nuevosDatos);
+    
+    // Se vacían los inputs
+    alert("✅ Perfil actualizado correctamente");
+    cambiapassword.value = false;
+    verificacionSeguridad.value = { actual: '', nueva: '', confirmacion: '' };
+    
+  } catch (err) {
+    alert("Error al actualizar: " + err.message);
   } finally {
-    loading.value = false;
+    // Pase lo que pase se quita el estado de carga 
+    cargando.value = false;
   }
 };
 
-const handleLogout = () => {
-  if (confirm("¿Cerrar sesión?")) {
+const cerrarSesion = () => {
+  if (confirm("¿Seguro que quieres cerrar la sesión?")) {
     userSession.logout();
-    router.push('/').then(() => window.location.reload());
+    routes.push('/').then(() => window.location.reload());
   }
 };
 </script>
 
 <style scoped>
-.profile-wrapper { display: flex; justify-content: center; padding: 40px 20px; background: #08090b; min-height: 100vh; }
-.profile-card { background: #12141a; padding: 35px; border-radius: 12px; width: 100%; max-width: 650px; color: white; border: 1px solid #2a2d35; }
+.perfil { display: flex; justify-content: center; padding: 40px 20px; background: #08090b; min-height: 100vh; }
+.div-user { background: #12141a; padding: 35px; border-radius: 12px; width: 100%; max-width: 650px; color: white; border: 1px solid #2a2d35; }
 
 h2 { color: #17bbba; text-align: center; margin-bottom: 25px; text-transform: uppercase; }
 
-.avatar-section { text-align: center; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-.large-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #17bbba; }
-.file-label { background: #1a1d24; border: 1px solid #333; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 13px; }
-#avatar-input { display: none; }
+.div-imagen-perfil { text-align: center; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.imagen { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #17bbba; }
+.cambiar-avatar { background: #1a1d24; border: 1px solid #333; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 13px; }
+#entrada-avatar { display: none; }
 
-.edit-form { display: flex; flex-direction: column; gap: 20px; }
-.field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.field-row { display: flex; gap: 20px; }
+.form-perfil { display: flex; flex-direction: column; gap: 20px; }
+.div-password { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.campos-dobles { display: flex; gap: 20px; }
 
 label { font-weight: bold; font-size: 12px; color: #17bbba; text-transform: uppercase; }
 input, textarea, select { padding: 12px; background: #1a1d24; border: 1px solid #333; color: white; border-radius: 6px; font-size: 14px; }
-.select-multiple { height: 100px; }
-.disabled-input { opacity: 0.5; cursor: not-allowed; }
+.seleccion-multiple { height: 100px; }
+.entrada-bloqueada { opacity: 0.5; cursor: not-allowed; }
 
-.password-box { background: rgba(23, 187, 186, 0.03); padding: 20px; border-radius: 8px; border: 1px solid #2a2d35; }
+.div-seguridad-confirmacion { background: rgba(23, 187, 186, 0.03); padding: 20px; border-radius: 8px; border: 1px solid #2a2d35; }
 h3 { font-size: 14px; margin-bottom: 15px; color: #17bbba; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 8px; }
 
-.password-toggle { margin-top: 10px; }
-.toggle-link { color: #17bbba; text-decoration: none; font-size: 13px; font-weight: bold; }
-.toggle-link:hover { text-decoration: underline; }
+.enlace-cambio-clave { margin-top: 10px; }
+.texto-cambio-password { color: #17bbba; text-decoration: none; font-size: 13px; font-weight: bold; }
+.texto-cambio-password:hover { text-decoration: underline; }
 
-.password-fields { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #333; }
-.cancel-link { color: #ff4444; font-size: 12px; text-decoration: none; align-self: flex-start; }
+.div-nueva-password { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #333; }
+.cancelar-cambio-password { color: #ff4444; font-size: 12px; text-decoration: none; align-self: flex-start; }
 
-/* BOTONES LADO A LADO */
-.actions { 
+.div-actualizar-perfil { 
   display: flex; 
   justify-content: space-between; 
   align-items: center; 
@@ -237,23 +281,23 @@ h3 { font-size: 14px; margin-bottom: 15px; color: #17bbba; text-transform: upper
   border-top: 1px solid #2a2d35;
 }
 
-.save-btn { 
+.boton-guardar-cambios { 
   background: #17bbba; color: white; border: none; padding: 14px 30px; 
   border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;
   min-width: 200px;
 }
-.save-btn:hover:not(:disabled) { background: #129d9c; transform: translateY(-2px); }
+.boton-guardar-cambios:hover:not(:disabled) { background: #129d9c; transform: translateY(-2px); }
 
-.logout-btn { 
+.boton-cerrar-sesion { 
   background: transparent; color: #ff4444; border: 1px solid #ff4444; 
   padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;
 }
-.logout-btn:hover { background: #ff4444; color: white; }
+.boton-cerrar-sesion:hover { background: #ff4444; color: white; }
 
-.player-id { font-family: monospace; color: #444; font-size: 12px; }
+.id { font-family: monospace; color: #444; font-size: 12px; }
 
 @media (max-width: 600px) {
-  .field-row, .actions { flex-direction: column; gap: 15px; }
-  .save-btn, .logout-btn { width: 100%; }
+  .campos-dobles, .div-actualizar-perfil { flex-direction: column; gap: 15px; }
+  .boton-guardar-cambios, .boton-cerrar-sesion { width: 100%; }
 }
 </style>

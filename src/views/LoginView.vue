@@ -1,36 +1,36 @@
 <template>
-  <div class="login-wrapper">
-    <div class="login-card">
+  <div class="login">
+    <div class="div-acceso">
       <h2>Iniciar Sesión</h2>
-      <p class="subtitle">Bienvenido de nuevo, jugador.</p>
+      <p class="subtitulo-bienvenida">Bienvenido de nuevo</p>
 
-      <form @submit.prevent="handleLogin" class="login-form">
-        <div class="field">
-          <label>Username</label>
+      <form @submit.prevent="iniciarSesion" class="form">
+        <div class="datos">
+          <label>Nombre de Usuario</label>
           <input 
             type="text" 
-            v-model="loginData.username" 
+            v-model="datosUser.username" 
             placeholder="Tu nombre de usuario" 
             required 
           />
         </div>
 
-        <div class="field">
+        <div class="datos">
           <label>Contraseña</label>
           <input 
             type="password" 
-            v-model="loginData.password" 
+            v-model="datosUser.password" 
             placeholder="••••••••" 
             required 
           />
         </div>
 
-        <button type="submit" class="login-btn" :disabled="loading">
-          {{ loading ? 'ENTRANDO...' : 'ENTRAR A NEXUSMATCH GG' }}
+        <button type="submit" class="coton-entrada" :disabled="cargaPeticion">
+          {{ cargaPeticion ? 'ENTRANDO...' : 'ENTRAR A NEXUSMATCH GG' }}
         </button>
       </form>
 
-      <div class="login-footer">
+      <div class="footer-registro">
         <span>¿No tienes cuenta?</span>
         <router-link to="/registro">Regístrate aquí</router-link>
       </div>
@@ -44,37 +44,36 @@ import { supabase } from '../supabase';
 import { userSession } from '../session';
 import { useRouter } from 'vue-router';
 
-const router = useRouter();
-const loading = ref(false);
+const routes = useRouter();
+const cargaPeticion = ref(false);
 
-const loginData = ref({
+const datosUser = ref({
   username: '',
   password: ''
 });
 
-const handleLogin = async () => {
-  loading.value = true;
+const iniciarSesion = async () => {
+  cargaPeticion.value = true;
   try {
-    // 1. Buscamos el perfil por username
-    const { data, error } = await supabase
+    // Se busca el perfil por el nombre de usuario
+    const { data: usuarioEncontrado, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('username', loginData.value.username)
-      .single(); // Esperamos solo un resultado
+      .eq('username', datosUser.value.username)
+      .single(); 
 
-    if (error || !data) {
+    if (error || !usuarioEncontrado) {
       alert("❌ El usuario no existe.");
       return;
     }
 
-    // 2. Comprobamos la contraseña (texto plano por ser proyecto de clase)
-    if (data.password === loginData.value.password) {
-      // ÉXITO: Guardamos en sesión
-      userSession.login(data);
-      alert("✅ ¡Hola de nuevo, " + data.username + "!");
+    // Se combrueba la contraseña
+    if (usuarioEncontrado.password === datosUser.value.password) {
+      userSession.login(usuarioEncontrado);
+      alert("¡Hola de nuevo, " + usuarioEncontrado.username + "!");
       
-      // Redirigimos al Home y recargamos para actualizar el Header
-      router.push('/').then(() => {
+      // Se redirige al Home y se actualiza el Header
+      routes.push('/').then(() => {
         window.location.reload();
       });
     } else {
@@ -84,13 +83,13 @@ const handleLogin = async () => {
   } catch (err) {
     alert("Error: " + err.message);
   } finally {
-    loading.value = false;
+    cargaPeticion.value = false;
   }
 };
 </script>
 
 <style scoped>
-.login-wrapper {
+.login {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,7 +98,7 @@ const handleLogin = async () => {
   min-height: 80vh;
 }
 
-.login-card {
+.div-acceso {
   width: 100%;
   max-width: 400px;
   background: #12141a;
@@ -118,20 +117,20 @@ h2 {
   letter-spacing: 1px;
 }
 
-.subtitle {
+.subtitulo-bienvenida {
   text-align: center;
   color: #666;
   font-size: 14px;
   margin-bottom: 30px;
 }
 
-.login-form {
+.form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.field {
+.datos {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -160,7 +159,7 @@ input:focus {
   box-shadow: 0 0 8px rgba(23, 187, 186, 0.2);
 }
 
-.login-btn {
+.coton-entrada {
   margin-top: 10px;
   background-color: #17bbba;
   color: white;
@@ -173,17 +172,17 @@ input:focus {
   transition: 0.3s;
 }
 
-.login-btn:hover:not(:disabled) {
+.coton-entrada:hover:not(:disabled) {
   background-color: #129d9c;
   transform: translateY(-2px);
 }
 
-.login-btn:disabled {
+.coton-entrada:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.login-footer {
+.footer-registro {
   margin-top: 25px;
   text-align: center;
   font-size: 14px;
@@ -193,13 +192,13 @@ input:focus {
   gap: 5px;
 }
 
-.login-footer a {
+.footer-registro a {
   color: #17bbba;
   text-decoration: none;
   font-weight: bold;
 }
 
-.login-footer a:hover {
+.footer-registro a:hover {
   text-decoration: underline;
 }
-</style>
+</style>  

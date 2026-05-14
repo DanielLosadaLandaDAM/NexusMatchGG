@@ -1,25 +1,25 @@
 <template>
-  <div v-if="!hasAccepted" class="cookie-overlay">
-    <div class="cookie-card">
-      <div class="cookie-header">
-        <div class="icon-box">🍪</div>
+  <div v-if="!cookiesAceptadas" class="cookies-overlay">
+    <div class="div-cookies">
+      <div class="aviso-privacidad">
+        <div class="emoticon">🍪</div>
         <h2>CONFIGURACIÓN DE PRIVACIDAD</h2>
       </div>
 
-      <div class="cookie-body">
+      <div class="texto">
         <p>
           En <strong>NexusMatchGG</strong> utilizamos cookies para optimizar tu búsqueda de compañeros, 
           analizar el tráfico y mejorar tu experiencia con nuestra IA de matchmaking.
         </p>
-        <p class="small-text">
+        <p class="texto-pequeno">
           Al hacer clic en "ACEPTAR TODO", permites que guardemos tus preferencias de estilo de juego 
           y región para que no tengas que configurarlas cada vez.
         </p>
       </div>
 
-      <div class="cookie-actions">
-        <button class="btn-cookie btn-secondary" @click="acceptCookies">SOLO ESENCIALES</button>
-        <button class="btn-cookie btn-primary" @click="acceptCookies">ACEPTAR TODO</button>
+      <div class="botones">
+        <button class="boton-cookies solo-esenciales" @click="consentirCookies">SOLO ESENCIALES</button>
+        <button class="boton-cookies aceptar-todo" @click="consentirCookies">ACEPTAR TODO</button>
       </div>
     </div>
   </div>
@@ -29,27 +29,27 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-const router = useRouter();
-const hasAccepted = ref(false);
+const routes = useRouter();
+const cookiesAceptadas = ref(false);
 
 onMounted(() => {
-  const consent = localStorage.getItem('cookies_aceptadas');
+  const cookiesAceptadas = localStorage.getItem('cookies_aceptadas');
   
-  if (consent === 'true') {
-    hasAccepted.value = true;
-    router.push('/');
+  if (cookiesAceptadas === 'true') {
+    cookiesAceptadas.value = true;
+    routes.push('/');
   }
 });
 
-const acceptCookies = () => {
+const consentirCookies = () => {
   localStorage.setItem('cookies_aceptadas', 'true');
-  hasAccepted.value = true;
-  router.push('/');
+  cookiesAceptadas.value = true;
+  routes.push('/');
 };
 </script>
 
 <style scoped>
-.cookie-overlay {
+.cookies-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -63,7 +63,7 @@ const acceptCookies = () => {
   padding: 20px;
 }
 
-.cookie-card {
+.div-cookies {
   background: #12141a;
   border: 1px solid #17bbba;
   border-radius: 24px;
@@ -72,10 +72,10 @@ const acceptCookies = () => {
   padding: 40px;
   box-shadow: 0 0 50px rgba(23, 187, 186, 0.2);
   text-align: center;
-  animation: fadeIn 0.6s ease-out;
+  animation: animacionAparicionSuave 0.6s ease-out;
 }
 
-.cookie-header h2 {
+.aviso-privacidad h2 {
   color: #17bbba;
   font-family: 'Arial Black', sans-serif;
   font-size: 20px;
@@ -83,29 +83,29 @@ const acceptCookies = () => {
   letter-spacing: 1px;
 }
 
-.icon-box {
+.emoticon {
   font-size: 50px;
 }
 
-.cookie-body {
+.texto {
   margin: 25px 0;
   color: #ccc;
   line-height: 1.6;
 }
 
-.small-text {
+.texto-pequeno {
   font-size: 13px;
   color: #666;
   margin-top: 15px;
 }
 
-.cookie-actions {
+.botones {
   display: flex;
   gap: 15px;
   margin-top: 30px;
 }
 
-.btn-cookie {
+.boton-cookies {
   flex: 1;
   padding: 15px;
   border-radius: 12px;
@@ -116,28 +116,28 @@ const acceptCookies = () => {
   border: none;
 }
 
-.btn-primary {
+.aceptar-todo {
   background: #17bbba;
   color: white;
 }
 
-.btn-primary:hover {
+.aceptar-todo:hover {
   background: #1ad3d1;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(23, 187, 186, 0.4);
 }
 
-.btn-secondary {
+.solo-esenciales {
   background: #1a1d24;
   color: #17bbba;
   border: 1px solid #17bbba;
 }
 
-.btn-secondary:hover {
+.solo-esenciales:hover {
   background: rgba(23, 187, 186, 0.1);
 }
 
-@keyframes fadeIn {
+@keyframes animacionAparicionSuave {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }

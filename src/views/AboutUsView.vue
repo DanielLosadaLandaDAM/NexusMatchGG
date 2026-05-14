@@ -29,10 +29,10 @@
 <script setup>
 import { useRouter } from 'vue-router';
 
-const llamadaRouter = useRouter();
+const routes = useRouter();
 
 function volverMain() {
-  llamadaRouter.push('/');
+  routes.push('/');
 }
 </script>
 
