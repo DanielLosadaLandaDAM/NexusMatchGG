@@ -1,38 +1,21 @@
-# NexusMatch GG
+Este proyecto es una aplicación web para jugadores desarrollada con **Vue 3** y **Supabase**. Las credenciales reales de la base de datos ya están incluidas en este repositorio.
 
-This template should help get you started developing with Vue 3 in Vite.
+## Instrucciones para ejecutar en local
 
-## Recommended IDE Setup
+Siga estos pasos para arrancar la aplicación en su ordenador:
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### 1. Clonar el repositorio
+Descargue el código de GitHub o clónelo en su máquina.
 
-## Recommended Browser Setup
+### 2. Activar las variables de entorno
+El proyecto incluye las claves reales en la raíz dentro de `.env.example`. Para que Vue las reconozca:
+* Cambie el nombre del archivo `.env.example` a simplemente `.env`
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+### 3. Instalar dependencias y arrancar
+Abra la terminal en la carpeta del proyecto y ejecute en orden:
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
-```
 
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+Ahí verá un enlace en el texto `http://localhost:5173` (normalmente).
+Haga clic en ese hipervínculo y llegará a la página de NexusMatchGG
