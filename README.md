@@ -12,7 +12,7 @@ El proyecto incluye las claves reales en la raíz dentro de `.env.example`. Para
 * Cambie el nombre del archivo `.env.example` a simplemente `.env`
 
 ### 3. Instalar dependencias y arrancar
-Abra la terminal en la carpeta del proyecto y ejecute en orden:
+Abra la terminal (CON PERMISOS DE ADMINISTRADOR) en la carpeta del proyecto y ejecute en orden:
 
 npm install
 npm run dev
