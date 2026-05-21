@@ -7,11 +7,17 @@ Siga estos pasos para arrancar la aplicación en su ordenador:
 ### 1. Clonar el repositorio
 Descargue el código de GitHub o clónelo en su máquina.
 
-### 2. Activar las variables de entorno
+### 2. Instalar node.js
+Acceda desde su navegador a la URL `https://nodejs.org/es`.
+Haga clic en el botón "Get node".
+Seleccione el instalador adecuado para su sistema operativo sin tocar ninguna opción más.
+Ejecute el archivo descargado y realice toda la instalación
+
+### 3. Activar las variables de entorno
 El proyecto incluye las claves reales en la raíz dentro de `.env.example`. Para que Vue las reconozca:
 * Cambie el nombre del archivo `.env.example` a simplemente `.env`
 
-### 3. Instalar dependencias y arrancar
+### 4. Instalar dependencias y arrancar
 Abra la terminal (CON PERMISOS DE ADMINISTRADOR) en la carpeta del proyecto y ejecute en orden:
 
 npm install
