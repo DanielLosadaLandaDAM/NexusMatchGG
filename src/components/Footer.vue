@@ -18,7 +18,6 @@
 .footer-pagina-principal {
   width: 100%;
   padding: 40px 0 20px;
-  background: linear-gradient(to top, #0c0d12 0%, #08090b 100%);
   border-top: 1px solid #1a1d24;
   margin-top: auto; 
 }
